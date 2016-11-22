@@ -6,8 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>API Reference</title>
 
-    <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
-    <link href="stylesheets/print.css" rel="stylesheet" media="print" />
     <style>
       .highlight table td { padding: 5px; }
 .highlight table pre { margin: 0; }
@@ -88,10 +86,12 @@
   color: #90a959;
 }
     </style>
+    <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
+    <link href="stylesheets/print.css" rel="stylesheet" media="print" />
       <script src="javascripts/all.js"></script>
   </head>
 
-  <body class="index" data-languages="[&quot;shell&quot;,&quot;ruby&quot;,&quot;python&quot;]">
+  <body class="index" data-languages="[&quot;shell&quot;]">
     <a href="#" id="nav-button">
       <span>
         NAV
@@ -99,11 +99,11 @@
       </span>
     </a>
     <div class="tocify-wrapper">
-      <img src="images/logo.png" />
+      <div style="text-align: center; margin: 5px;">
+        <img src="images/logo.png" />
+      </div>
         <div class="lang-selector">
               <a href="#" data-language-name="shell">shell</a>
-              <a href="#" data-language-name="ruby">ruby</a>
-              <a href="#" data-language-name="python">python</a>
         </div>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
@@ -111,236 +111,601 @@
         <ul class="search-results"></ul>
       <div id="toc">
       </div>
-        <ul class="toc-footer">
-            <li><a href='#'>Sign Up for a Developer Key</a></li>
-            <li><a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
-        </ul>
     </div>
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
-        <h1 id="introduction">Introduction</h1>
+        <h1 id="getting-started">Getting Started</h1>
 
-<p>Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.</p>
+<p>The DeskPRO API is a REST-based API that runs over HTTP(S). All API requests are made to a URL that begins with
+<code class="prettyprint">http://example.com/api/v2/</code>.</p>
 
-<p>We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.</p>
+<p>Since all API requests are simply HTTP requests, it&rsquo;s easy to use in any programming
+language. For the purposes of demonstration, we&rsquo;ll use cURL in our examples here.</p>
 
-<p>This example API documentation page was created with <a href="https://github.com/tripit/slate">Slate</a>. Feel free to edit it and use it as a base for your own API&rsquo;s documentation.</p>
-
-<h1 id="authentication">Authentication</h1>
-
-<blockquote>
-<p>To authorize, use this code:</p>
-</blockquote>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight shell"><code><span class="c"># With shell, you can just pass the correct header with each request</span>
-curl <span class="s2">"api_endpoint_here"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
+<p>Here&rsquo;s an exmaple call made to the <code class="prettyprint">helpdesk/discover</code> endpoint:</p>
+<pre class="highlight shell"><code>curl http://example.com/api/v2/helpdesk/discover
 </code></pre>
 
 <blockquote>
-<p>Make sure to replace <code class="prettyprint">meowmeowmeow</code> with your API key.</p>
-</blockquote>
-
-<p>Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our <a href="http://example.com/developers">developer portal</a>.</p>
-
-<p>Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:</p>
-
-<p><code class="prettyprint">Authorization: meowmeowmeow</code></p>
-
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
-</aside>
-
-<h1 id="kittens">Kittens</h1>
-
-<h2 id="get-all-kittens">Get All Kittens</h2>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span>
-</code></pre>
-<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</code></pre>
-<pre class="highlight shell"><code>curl <span class="s2">"http://example.com/api/kittens"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre>
-
-<blockquote>
-<p>The above command returns JSON structured like this:</p>
-</blockquote>
-<pre class="highlight json"><code><span class="p">[</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fluffums"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"calico"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">]</span><span class="w">
-</span></code></pre>
-
-<p>This endpoint retrieves all kittens.</p>
-
-<h3 id="http-request">HTTP Request</h3>
-
-<p><code class="prettyprint">GET http://example.com/api/kittens</code></p>
-
-<h3 id="query-parameters">Query Parameters</h3>
-
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>include_cats</td>
-<td>false</td>
-<td>If set to true, the result will also include cats.</td>
-</tr>
-<tr>
-<td>available</td>
-<td>true</td>
-<td>If set to false, the result will include kittens that have already been adopted.</td>
-</tr>
-</tbody></table>
-
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
-
-<h2 id="get-a-specific-kitten">Get a Specific Kitten</h2>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight shell"><code>curl <span class="s2">"http://example.com/api/kittens/2"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre>
-
-<blockquote>
-<p>The above command returns JSON structured like this:</p>
+<p>Example response:</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+    </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"is_deskpro"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"helpdesk_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https:\/\/example.com\/"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"base_api_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https:\/\/example.com\/api\/v2\/"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"build"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1477995658"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+    </span><span class="nt">"linked"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
-<p>This endpoint retrieves a specific kitten.</p>
+<h2 id="authentication">Authentication</h2>
 
-<aside class="warning">Inside HTML code blocks like this one, you can&rsquo;t use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+<p>The above example is one of the few API endpoints that is public. Almost every API endpoint in DeskPRO that
+is actually useful requires authentication. The most common way to use the API is via an API key. An admin can
+create keys from Admin &gt; Apps &gt; API Keys.</p>
 
-<h3 id="http-request">HTTP Request</h3>
+<p>To authenticate an API request, you send an Authorization header like <code class="prettyprint">Authorization: key YOURKEY</code>. Your API key
+will be an integer, followed by a colon, followed by a long random string of characters.</p>
 
-<p><code class="prettyprint">GET http://example.com/kittens/&lt;ID&gt;</code></p>
+<blockquote>
+<p>Example request to the /me endpoint to see info about the agent the key is assigned to:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Authorization: key 2:YWK2PGCS8CNW62SR8TBTBKWMY"</span> http://example.com/api/v2/me
+</code></pre>
 
-<h3 id="url-parameters">URL Parameters</h3>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"auth_method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"api_key"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"app_id"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"person_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"person"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"..."</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+    </span><span class="nt">"linked"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h2 id="request-format">Request Format</h2>
+
+<p>The DeskPRO API is completely JSON.</p>
+
+<ul>
+<li>You SHOULD send a <code class="prettyprint">Accept: application/json</code> to confirm that your app is expecting JSON back from the API.</li>
+<li>You MUST send <code class="prettyprint">POST/PUT</code> requests with a <code class="prettyprint">Content-Type: application/json</code> header and send a well-formed JSON payload.</li>
+</ul>
+
+<h3 id="http-verbs">HTTP Verbs</h3>
+
+<p>The HTTP verb you use is meaningful. Here&rsquo;s a summary of the HTTP verbs you can use with the DeskPRO API and what they mean:</p>
 
 <table><thead>
 <tr>
-<th>Parameter</th>
+<th>Verb</th>
 <th>Description</th>
+<th>Example</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>ID</td>
-<td>The ID of the kitten to retrieve</td>
+<td>GET</td>
+<td>Get a single resource or collection</td>
+<td>GET /tickets or GET /tickets/13</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>Delete a single resource</td>
+<td>DELETE /ticket/13</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td>Create something new</td>
+<td>PUT /tickets</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>Update an existing resource</td>
+<td>POST /tickets/13</td>
 </tr>
 </tbody></table>
 
-          <h1 id="errors">Errors</h1>
+<h2 id="response-format">Response Format</h2>
 
-<aside class="notice">This error section is stored in a separate file in `includes/_errors.md`. Slate allows you to optionally separate out your docs into many files&hellip;just save them to the `includes` folder and add them to the top of your `index.md`&rsquo;s frontmatter. Files are included in the order listed.</aside>
+<p>When you perform a <code class="prettyprint">GET</code> request to load a resource or a collection, you&rsquo;ll get a response like this. </p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+    </span><span class="nt">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+    </span><span class="nt">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
 
-<p>The Kittn API uses the following error codes:</p>
+<ul>
+<li><code class="prettyprint">data</code> is the JSON representation of the resource requested, or an array of objects if you requested a collection</li>
+<li><code class="prettyprint">links</code> optional; when specified, it is an array of useful links. Resource collections always include links for “next”, “prev”, “first”, “last”.</li>
+<li><code class="prettyprint">meta</code> optional; misc information that varies based on endpoint. Resource collections should include “count”, “total_count*, “page”, “total_pages”.</li>
+</ul>
+
+<h3 id="collection-responses">Collection Responses</h3>
+
+<p>During a resource collection request, you can specify the following optional query parameters:</p>
+
+<ul>
+<li><code class="prettyprint">count</code> the number of results to return</li>
+<li><code class="prettyprint">page</code>the page you are requesting</li>
+</ul>
+
+<p>Collection responses are always an <em>array</em>  of objects inside of <code class="prettyprint">data</code>.</p>
+
+<p><code class="prettyprint">links</code> will contain some useful links to help you paginate:</p>
+
+<ul>
+<li><code class="prettyprint">next</code> URL to the next page of results</li>
+<li><code class="prettyprint">prev</code> URL to the previous page of results</li>
+<li><code class="prettyprint">self</code> URL to the page you requested</li>
+<li><code class="prettyprint">first</code> URL to the first page of results</li>
+<li><code class="prettyprint">last</code> URL to the last page of results</li>
+</ul>
+
+<p><code class="prettyprint">meta</code> will contain some useful data:</p>
+
+<ul>
+<li><code class="prettyprint">total</code> is the total count (all matching resources)</li>
+<li><code class="prettyprint">page</code> is current page number</li>
+<li><code class="prettyprint">per_page</code> is a count of the number of resources returned to you on this page</li>
+<li><code class="prettyprint">total_pages</code> is the total number of pages for this request</li>
+</ul>
+
+<blockquote>
+<p>Example request to /tickets which is a collection resource:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Authorization: key 2:YWK2PGCS8CNW62SR8TBTBKWMY"</span> http://example.com/api/v2/tickets
+</code></pre>
+
+<blockquote>
+<p>Example response of a collection resource</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+   </span><span class="nt">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"first"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/tickets"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"next"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/tickets?page=2"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"prev"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"last"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/tickets?page=106"</span><span class="w">
+   </span><span class="p">},</span><span class="w">
+   </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="err">{</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"person_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Foo Bar"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="err">{</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"person_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fizz Buzz"</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+   </span><span class="err">},</span><span class="w">
+   </span><span class="s2">"meta"</span><span class="err">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">5445</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"page"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"per_page"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"total_pages"</span><span class="p">:</span><span class="w"> </span><span class="mi">545</span><span class="w">
+   </span><span class="p">}</span><span class="w">
+</span><span class="err">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="creating-and-updating-content">Creating and Updating Content</h3>
+
+<p>When you update a resource with <code class="prettyprint">POST</code>, the API will simply return a <code class="prettyprint">204 No Content</code> empty response to ackknowledge that
+the request succeeded. When you create a resource with a <code class="prettyprint">PUT</code> request, the API will return a <code class="prettyprint">201 Created</code> response.</p>
+
+<p>In both cases, a <code class="prettyprint">Location</code> header will be supplied with the full URL to the API endpoint where
+you can <code class="prettyprint">GET</code> the resource.</p>
+
+<p>TIP: If you would rather your <code class="prettyprint">POST/PUT</code> request return the full resource automatically (i.e. you want to use it right away),
+you can submit your request with the <code class="prettyprint">?follow_location=1</code> query string parameter. This will cause the API
+to return the resource as if you did the GET yourself.</p>
+
+<h3 id="error-responses">Error Responses</h3>
+
+<p>Error responses are also JSON and follow the shape described here.</p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">400</span><span class="w">
+    </span><span class="s2">"code"</span><span class="err">:</span><span class="w"> </span><span class="s2">"invalid_json_body"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Invalid JSON body"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<ul>
+<li>The <code class="prettyprint">status</code> will be the HTTP status code that most closely matches the error.</li>
+<li>The <code class="prettyprint">code</code> is a DeskPRO specific string to represent the specific error that happened. You may
+wish to use this value in your code in an if/switch etc to base your error handling on.</li>
+<li>The <code class="prettyprint">message</code> is a human-readable English string that describes what went wrong. This value is typcially
+only useful for developers.</li>
+</ul>
+
+<h4 id="details-errors">Details Errors</h4>
+
+<p>In some cases, detailed error messages are available, such as when there are form validation errors.</p>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="mi">400</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"invalid_input"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Request input is invalid."</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"extra_fields"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Unexpected field names: name"</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">],</span><span class="w">
+        </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                    </span><span class="p">{</span><span class="w">
+                        </span><span class="nt">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"required"</span><span class="p">,</span><span class="w">
+                        </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"This value should not be blank."</span><span class="w">
+                    </span><span class="p">}</span><span class="w">
+                </span><span class="p">]</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nt">"date"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                  </span><span class="p">{</span><span class="w">
+                    </span><span class="nt">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"invalid_date"</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"This date is invalid"</span><span class="w">
+                  </span><span class="p">}</span><span class="w">
+                </span><span class="p">],</span><span class="w">
+                </span><span class="nt">"fields"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                  </span><span class="nt">"day"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                      </span><span class="nt">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                        </span><span class="p">{</span><span class="w">
+                          </span><span class="nt">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"out_of_range"</span><span class="p">,</span><span class="w">
+                          </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Must be a number between 1 and 31"</span><span class="w">
+                        </span><span class="p">}</span><span class="w">
+                      </span><span class="p">]</span><span class="w">
+                  </span><span class="p">},</span><span class="w">
+                  </span><span class="nt">"year"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                    </span><span class="nt">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                      </span><span class="p">{</span><span class="w">
+                        </span><span class="nt">"code"</span><span class="p">:</span><span class="w"> </span><span class="s2">"required"</span><span class="p">,</span><span class="w">
+                        </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"This value is required"</span><span class="w">
+                      </span><span class="p">}</span><span class="w">
+                    </span><span class="p">]</span><span class="w">
+                  </span><span class="p">}</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>The root <code class="prettyprint">errors</code> property is an object that has two properties:</p>
+
+<ul>
+<li><code class="prettyprint">errors.errors</code> is a JSON array of error objects that happened on a global level (not specific to any one input).</li>
+<li><code class="prettyprint">errors.fields</code> is a JSON object that has a property for every expected input name that had an error.
+Inside of each field is a property named “errors” which is an array of error objects (code/message).</li>
+</ul>
+
+<h3 id="common-http-status-codes">Common HTTP Status Codes</h3>
+
+<p>The HTTP status codes that the API returns is significant. Here is a list of common return codes.</p>
 
 <table><thead>
 <tr>
-<th>Error Code</th>
-<th>Meaning</th>
+<th>Code</th>
+<th>Verbs</th>
+<th>Example</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>400</td>
-<td>Bad Request &ndash; Your request sucks</td>
-</tr>
-<tr>
-<td>401</td>
-<td>Unauthorized &ndash; Your API key is wrong</td>
-</tr>
-<tr>
-<td>403</td>
-<td>Forbidden &ndash; The kitten requested is hidden for administrators only</td>
+<td>200</td>
+<td>GET</td>
+<td>found and returned</td>
 </tr>
 <tr>
 <td>404</td>
-<td>Not Found &ndash; The specified kitten could not be found</td>
+<td>Any</td>
+<td>resource not found</td>
+</tr>
+<tr>
+<td>201</td>
+<td>POST</td>
+<td>created resource</td>
+</tr>
+<tr>
+<td>204</td>
+<td>PUT</td>
+<td>updated resource</td>
+</tr>
+<tr>
+<td>400</td>
+<td>Any</td>
+<td>Bad Request</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Any</td>
+<td>unauthorized</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Any</td>
+<td>forbidden</td>
 </tr>
 <tr>
 <td>405</td>
-<td>Method Not Allowed &ndash; You tried to access a kitten with an invalid method</td>
-</tr>
-<tr>
-<td>406</td>
-<td>Not Acceptable &ndash; You requested a format that isn&rsquo;t json</td>
-</tr>
-<tr>
-<td>410</td>
-<td>Gone &ndash; The kitten requested has been removed from our servers</td>
-</tr>
-<tr>
-<td>418</td>
-<td>I&rsquo;m a teapot</td>
+<td>Any</td>
+<td>method not allowed</td>
 </tr>
 <tr>
 <td>429</td>
-<td>Too Many Requests &ndash; You&rsquo;re requesting too many kittens! Slow down!</td>
+<td>Any</td>
+<td>too many requests</td>
 </tr>
 <tr>
-<td>500</td>
-<td>Internal Server Error &ndash; We had a problem with our server. Try again later.</td>
-</tr>
-<tr>
-<td>503</td>
-<td>Service Unavailable &ndash; We&rsquo;re temporarially offline for maintanance. Please try again later.</td>
+<td>423</td>
+<td>Any</td>
+<td>Locked</td>
 </tr>
 </tbody></table>
+
+<h2 id="api-key-limits">API Key Limits</h2>
+
+<p>You can specify API limits on every API key you create. For example, it is not uncommon to set an upper limit on
+an API key to prevent some kind of mistake in it&rsquo;s use (such as a flood or infinite loop situation). You can define
+these limits in terms of an hourly limit or a daily limit.</p>
+
+<p>For cloud customers, there is also default global limit to prevent abuse. You can raise this on request by contacting
+ us at support@deskpro.com.</p>
+
+<p>When you hit a rate limit, requests will begin to fail with a HTTP status code <code class="prettyprint">429 Too Many Requests</code> error.</p>
+
+<h1 id="api-token-exchange">API Token Exchange</h1>
+
+<p>You can also use the API to exchange an agent login for an API token which can be used to authenticate requests.
+An API token is similar to an API key except that it doesn&rsquo;t need to be created by an admin. It&rsquo;s created
+by the system when given a successful set of credentials.</p>
+
+<p>A token is used in the same way except the Authorzation header looks like <code class="prettyprint">Authorization: token YOURTOKEN</code>. This is
+the same as the API key method except it starts with the word &ldquo;token&rdquo; instead of &ldquo;key&rdquo;.</p>
+
+<blockquote>
+<p>Example request sending login credentials</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+     -X POST <span class="se">\</span>
+     -d <span class="s1">'{"email": "user@example.com", "password": "my_password"}'</span>
+     http://example.com/api/v2/api_tokens
+</code></pre>
+
+<blockquote>
+<p>Example response with an API token</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"person_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"18:BZWWGQ58QDX8H5B4W4RAJ978Q"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+    </span><span class="nt">"linked"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<blockquote>
+<p>The /me endpoint returns info about the agent account the token/api key is for</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Authorization: token 18:BZWWGQ58QDX8H5B4W4RAJ978Q"</span> http://example.com/api/v2/me
+</code></pre>
+
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"auth_method"</span><span class="p">:</span><span class="w"> </span><span class="s2">"api_token"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"app_id"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"person_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"person"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"..."</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+    </span><span class="nt">"linked"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h2 id="external-authentication-sources">External Authentication Sources</h2>
+
+<p>The above example works for DeskPRO-based logins or form-based logins where a username/email address
+and password can be gathered from the user and then passed directly to the API for validation. But it does
+NOT work for other types of authentication apps such as JWT, SAML, oAuth, etc.</p>
+
+<p>For these types of apps, you need to render a website with a special URL for the user to log in to. When the user
+finishes logging in, they are redirect back to DeskPRO which can then communicate the changes up to your app
+through Javascript.</p>
+
+<h3 id="get-a-list-of-usersources">Get a list of usersources</h3>
+
+<p>Typically, the first step in your app will be to get a list of usersources that exist so you can render
+some kind of button.</p>
+
+<blockquote>
+<p>Request user sources used for agents:</p>
+</blockquote>
+<pre class="highlight plaintext"><code>curl http://example.com/api/v2/api_tokens/user_sources/agent
+</code></pre>
+
+<blockquote>
+<p>Example response including a Google+ user source:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Google+ Sign-In"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"agent"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"source_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"googleplus"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"display_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"social"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"display_order"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"display_options"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"login_url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http:\/\/master.dp.devput.com:8080\/api\/v2\/api_tokens\/user_sources\/5\/login?format=default"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="nt">"is_enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="nt">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+    </span><span class="nt">"linked"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<h3 id="handling-the-login">Handling the login</h3>
+
+<p>In your app, you would render a button that loaded the URL in the <code class="prettyprint">data.display_options.login_url</code> field. In a web app,
+this might be rendering an <code class="prettyprint">&lt;a&gt;</code> tag for example. In a desktop or mobile application, you would initialise a new
+web view to accept te login.</p>
+
+<p>After the user logs in, they are returned to DeskPRO which renders a special page like this:</p>
+<pre class="highlight html"><code><span class="nt">&lt;script&gt;</span><span class="nx">sendPayload</span><span class="p">({</span>
+    <span class="s2">"token"</span><span class="p">:</span> <span class="s2">"18:BZWWGQ58QDX8H5B4W4RAJ978Q"</span><span class="p">,</span>
+    <span class="s2">"person_id"</span><span class="p">:</span> <span class="mi">1</span>
+<span class="p">})</span><span class="nt">&lt;/script&gt;</span>
+</code></pre>
+
+<p>Your app will need to make sure the web view implements this special <code class="prettyprint">sendPayload</code> function so it can accept the
+Javascript object.</p>
+
+<h1 id="batch-requests">Batch Requests</h1>
+
+<p>Sometimes you want to perform multiple queries all at once. For example, maybe you need to load a few collections
+to populate a form. Normally you would need to submit multiple HTTP requests which could be slow.</p>
+
+<blockquote>
+<p>Example request using a key-value map of requests to execute in a batch:</p>
+</blockquote>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+     -X POST <span class="se">\</span>
+     -d <span class="s1">'
+ {
+     "t": {
+         "method": "POST",
+         "url": "/api/tickets",
+         "payload": {
+             "title": "new-ticket"
+         }
+    },
+    "john": "/api/people/1",
+    "img": "/api/people/1/image",
+    "parts": "/api/tickets/5/participants"
+ }
+'</span>
+     http://example.com/api/v2/batch
+</code></pre>
+
+<blockquote>
+<p>Example response where each response uses the same key you sent in the request:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"t"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"response_code"</span><span class="p">:</span><span class="w"> </span><span class="mi">201</span><span class="p">,</span><span class="w">
+
+      </span><span class="err">}</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+         </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"new-ticket"</span><span class="w">
+         </span><span class="s2">"..."</span><span class="err">:</span><span class="w"> </span><span class="s2">"..."</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"john"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"headers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"response_code"</span><span class="p">:</span><span class="w"> </span><span class="mi">404</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"..."</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="nt">"..."</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>You POST a map to <code class="prettyprint">/api/v2/batch</code> describing the requests you want to submit. The system will process all of your reuqests
+at once, and send you back a single result object. The keys of the result will be the same keys you submitted.</p>
+
+<h2 id="short-get-syntax">Short GET Syntax</h2>
+
+<p>You can also use the short GET syntax to process multiple GET requests all at once:</p>
+<pre class="highlight shell"><code>curl -H <span class="s2">"Content-Type: application/json"</span> <span class="se">\</span>
+    http://example.com/api/v2/batch/api/v2/batch?get[stars]<span class="o">=</span>/api/v2/ticket_stars&amp;get[departments]<span class="o">=</span>/api/v2/ticket_departments
+</code></pre>
+
+<h1 id="side-loading">Side Loading</h1>
+
+<p>A normal request for a resource usually includes IDs of related resources, like so:</p>
+
+<h1 id="access-control">Access Control</h1>
+
+<p>Every API request is performed in the context of a specific agent or admin in the system. When you create an API key,
+you specify the agent account it is tied to. You can never do anything with the API that the agent/admin account
+would not be able to do itself through the web interface.</p>
+
+<p>For example, say you made an API key for John. Using that API key, you could not view, reply, delete etc a ticket
+that John himself doesn&rsquo;t already have access to.</p>
+
+<p>This means if you needed some kind of &ldquo;super&rdquo; API key that could do <em>everything</em>, you would need to make sure the
+agent that key was tied to had full permissions in the helpdesk.</p>
+
+<h2 id="access-control-via-tags">Access control via Tags</h2>
+
+<p>Every API endpoint in the system has one or more &ldquo;tags&rdquo; associated with it. You can view the tags for a particular
+endpoint by finding it in the <a href="/api/v2/doc">Full API Browser</a>. Expand the API endpoint to view the details, and
+under the &ldquo;API tags for this endpoint&rdquo; heading will be the list of tags applied to the endpoint.</p>
+
+<p>For example, <code class="prettyprint">GET /api/v2/tickets</code> has a tag of <code class="prettyprint">tickets.tickets.list</code>. And <code class="prettyprint">DELETE /api/v2/tickets/{id}</code>
+has a tag of <code class="prettyprint">tickets.tickets.delete</code>.</p>
+
+<p>You can fine-tune access to API endpoitns by specificying a tag pattern when you define the API key in
+Admin &gt; Apps &gt; API Keys. In the &ldquo;Tags&rdquo; tab, enter one or more tags you want to allow access to.</p>
+
+<p>You can use wildcards to whitelist a whole group of related tags (indeed, the default value for API keys
+is to allow <em>all</em> API endpoints so the value is <code class="prettyprint">*</code>). You can also use a minus symbol to <em>remove</em> specific
+actions you don&rsquo;t want to allow.</p>
+
+<p>Examples:</p>
+
+<ul>
+<li><code class="prettyprint">*</code> all API endpoints</li>
+<li><code class="prettyprint">*, -tickets.*</code> all API endpoints except tickets</li>
+<li><code class="prettyprint">tickets.*, -*.delete</code>&rsquo; ticket endpoints but nothing to do with deleting</li>
+<li><code class="prettyprint">tickets.tickets.list</code> only allow using the ticket listing API</li>
+</ul>
+
+<h2 id="api-access-modes">API Access Modes</h2>
+
+<p>Most of the time, most APIs are available to any authenticated user of the API. But some APIs are locked down
+so they cannot be used except by users accessing the API by a specific method.</p>
+
+<p>You can view these limitations on each endpoint by viewing the <a href="/api/v2/doc">Full API Browser</a>. In an expanded
+node for an endpoint, notice the value for &ldquo;Applicable API Modes&rdquo;.</p>
+
+<ul>
+<li><code class="prettyprint">key</code> is the msot common and means the API can be used via an API key</li>
+<li><code class="prettyprint">token</code> means the API can be used by a token (see below, &ldquo;API Token Exchange&rdquo;)</li>
+<li><code class="prettyprint">session</code> means that the API can be used from the browser if the agent/admin is currently logged in. These are typically
+APIs used by the agent or admin interface in DeskPRO itself</li>
+</ul>
+
+<p>You almost never need to worry about this. Typically only internal APIs are marked as session or token only.</p>
 
       </div>
       <div class="dark-box">
           <div class="lang-selector">
                 <a href="#" data-language-name="shell">shell</a>
-                <a href="#" data-language-name="ruby">ruby</a>
-                <a href="#" data-language-name="python">python</a>
           </div>
       </div>
     </div>
