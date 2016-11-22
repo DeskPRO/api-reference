@@ -9,13 +9,7 @@ search: true
 
 # Getting Started
 
-The DeskPRO API is a REST-based API that runs over HTTP(S). All API requests are made to a URL that begins with
-`http://example.com/api/v2/`.
-
-Since all API requests are simply HTTP requests, it's easy to use in any programming
-language. For the purposes of demonstration, we'll use cURL in our examples here.
-
-Here's an exmaple call made to the `helpdesk/discover` endpoint:
+> Here's an example call made to the `helpdesk/discover` endpoint:
 
 ```shell
 curl http://example.com/api/v2/helpdesk/discover
@@ -36,19 +30,28 @@ curl http://example.com/api/v2/helpdesk/discover
 }
 ```
 
+The DeskPRO API is a REST-based API that runs over HTTP(S). All API requests are made to a URL that begins with
+`http://example.com/api/v2/`.
+
+<aside class="notice">
+All API requests are under the path <strong>/api/v2/</strong>. Note the "v2" is important!
+</aside>
+
+Since all API requests are simply HTTP requests, it's easy to use in any programming language. For the purposes of demonstration, we'll use cURL in our examples here.
+
+**API Browser**
+
+On any DeskPRO instance, browse to `/api/v2/doc` to view a full auto-generated API browser.
+
+For example, `http://example.com/api/v2/doc`.
+
+The auto-generated API browser can help if you need to quickly locate a particular API or if you want to see metadata about a particular API endpoint (such as tags, versions or stability flags).
+
 ## Authentication
 
-The above example is one of the few API endpoints that is public. Almost every API endpoint in DeskPRO that
-is actually useful requires authentication. The most common way to use the API is via an API key. An admin can
-create keys from Admin > Apps > API Keys.
-
-To authenticate an API request, you send an Authorization header like `Authorization: key YOURKEY`. Your API key
-will be an integer, followed by a colon, followed by a long random string of characters.
-
-> Example request to the /me endpoint to see info about the agent the key is assigned to:
-
 ```shell
-curl -H "Authorization: key 2:YWK2PGCS8CNW62SR8TBTBKWMY" http://example.com/api/v2/me
+curl -H "Authorization: key 2:YWK2PGCS8CNW62SR8TBTBKWMY" \
+	http://example.com/api/v2/me
 ```
 
 > Example response:
@@ -68,6 +71,68 @@ curl -H "Authorization: key 2:YWK2PGCS8CNW62SR8TBTBKWMY" http://example.com/api/
     "linked": {}
 }
 ```
+
+The above example is one of the few API endpoints that is public. Almost every API endpoint in DeskPRO that
+is actually useful requires authentication. The most common way to use the API is via an API key. An admin can
+create keys from Admin > Apps > API Keys.
+
+To authenticate an API request, you send an Authorization header like `Authorization: key YOURKEY`. Your API key
+will be an integer, followed by a colon, followed by a long random string of characters.
+
+> Example request to the /me endpoint to see info about the agent the key is assigned to:
+
+## API Versions and Backwards Compatibility
+
+> API request without a version prefix
+> (always using the latest API version)
+
+```shell
+curl -H "Authorization: key 2:YWK2PGCS8CNW62SR8TBTBKWMY" \
+	http://example.com/api/v2/me
+```
+
+> API request with a version prefix
+
+```shell
+curl -H "Authorization: key 2:YWK2PGCS8CNW62SR8TBTBKWMY" \
+	http://example.com/api/v2/20161122/me
+```
+
+The major API version is version 2, as denoted by the path prefix `/api/v2/`. But you may also specify a hard-coded date in the format of `YYYYMMDD` to guarantee API compatibility for that date.
+
+Examples:
+
+* `/api/v2/20161122/tickets`
+* `/api/v2/20150101/tickets`
+* `/api/v2/tickets`
+
+If you do NOT specify a date segment (such as the last example above), then the API endpoint you use will always be the latest.
+
+<aside class="notice">
+The version date can be any arbitrary date. For example, if you started writing an app, you would be wise to simply use the date for today as that is when you started using the API.
+<br/><br/>
+When the system routes your API request, it will look at the date and will choose the closest version to your requested date without going over.
+</aside>
+
+We guarantee that the API for a particular version will remain compatible, even if you upgrade DeskPRO.
+
+This means that the "shape" of JSON payloads (both input requests and output responses) will remain the same. Though we may make _additions_ which are optional and do not change the overall behaviour of the API.
+
+For example, we might add a new input parameter to `PUT /tickets` for a new feature. But if your application code doesn't submit this parameter, then it doesn't matter; the API would just function the way it always did. This is an example of an API change that is backwards compatible and as such it would not constitute a breaking change and we would not create a new API version for it.
+
+In rare cases, we may need to make a _breaking change_ (for example, to fix a bug that affects actual behaviour). In those cases a new API version will be created. If you are using the API with a version prefix as described above, then you will continue to use the old version and no changes will be required in your application. But if you are not using a version prefix (which means you are always using the "latest API"), then it's possible a breaking change will require you to update your code.
+
+<aside class="warning">
+It is best practice to always include a date version prefix in your API request to guarantee API compatibility. If you do not, then it will ALWAYS be the latest API which may (rarely) introduce breaking changes as you upgrade DeskPRO.
+</aside>
+
+**API Endpoint Stability**
+
+Note that some API endpoints are marked as _unstable_ in the API browser. Unstable APIs means they may change without warning, and without a new API version being issued.
+
+This means that if you are using an unstable API, upgrading DeskPRO may result in that API being changed in a backwards-incompatible way without notice.
+
+These APIs are generally APIs intended for internal use, or are otherwise experimental. If you intend to use an unstable API, you should submit a ticket to support@deskpro.com requesting the API become stable.
 
 ## Request Format
 
@@ -105,6 +170,52 @@ When you perform a `GET` request to load a resource or a collection, you'll get 
 
 ### Collection Responses
 
+> Example request to /tickets which is a collection resource:
+
+```shell
+curl -H "Authorization: key 2:YWK2PGCS8CNW62SR8TBTBKWMY" http://example.com/api/v2/tickets
+```
+
+> Example response of a collection resource
+
+```json
+{
+   "links": {
+        "first": "/tickets",
+        "next": "/tickets?page=2",
+        "prev": null,
+        "last": "/tickets?page=106"
+   },
+   "data": [
+      {
+        "id": 1,
+        "person_id": 4,
+        "subject": "Foo Bar",
+        "...": "..."
+      },
+      {
+        "id": 2,
+        "person_id": 12,
+        "subject": "Fizz Buzz",
+        "...": "..."
+      }
+   ],
+   "meta": {
+      "total": 5445,
+      "page": 1,
+      "per_page": 10,
+      "total_pages": 545
+   }
+}
+```
+
+> Example fetching ticket objects for 3 specific ticket IDs
+
+```shell
+curl -H "Authorization: key 2:YWK2PGCS8CNW62SR8TBTBKWMY" \
+	http://example.com/api/v2/tickets?ids=123,456,789
+```
+
 During a resource collection request, you can specify the following optional query parameters:
 
 * `count` the number of results to return
@@ -127,46 +238,13 @@ Collection responses are always an _array_  of objects inside of `data`.
 * `per_page` is a count of the number of resources returned to you on this page
 * `total_pages` is the total number of pages for this request
 
-> Example request to /tickets which is a collection resource:
+**Tip: Most collections accept a `ids` parameters**
 
-```shell
-curl -H "Authorization: key 2:YWK2PGCS8CNW62SR8TBTBKWMY" http://example.com/api/v2/tickets
-```
-
-> Example response of a collection resource
-
-```json
-{
-   "links": {
-        "first": "/tickets",
-        "next": "/tickets?page=2",
-        "prev": null,
-        "last": "/tickets?page=106"
-   },
-   "data": [
-      {
-        "id": 1,
-        "person_id": 4,
-        "title": "Foo Bar"
-      },
-      {
-        "id": 2,
-        "person_id": 12,
-        "title": "Fizz Buzz"
-      }
-   ],
-   "meta": {
-      "total": 5445,
-      "page": 1,
-      "per_page": 10,
-      "total_pages": 545
-   }
-}
-```
+Most collection resources accept an `ids` parameter where you can provide specific IDs for resources you want to retrieve. This makes it easy to load multiple objects at once.
 
 ### Creating and Updating Content
 
-When you update a resource with `POST`, the API will simply return a `204 No Content` empty response to ackknowledge that
+When you update a resource with `POST`, the API will simply return a `204 No Content` empty response to acknowledge that
 the request succeeded. When you create a resource with a `PUT` request, the API will return a `201 Created` response.
 
 In both cases, a `Location` header will be supplied with the full URL to the API endpoint where
@@ -176,17 +254,45 @@ TIP: If you would rather your `POST/PUT` request return the full resource automa
 you can submit your request with the `?follow_location=1` query string parameter. This will cause the API
 to return the resource as if you did the GET yourself.
 
-### Error Responses
+### Common HTTP Status Codes
 
-Error responses are also JSON and follow the shape described here.
+The HTTP status codes that the API returns is significant. Here is a list of common return codes.
+
+| Code   | Verbs | Example                         |
+|--------|-------------------------------------|---------------------------------|
+|200 |GET |found and returned|response is described above                                                          |
+|404 |Any |resource not found|                                                                                     |
+|201 |POST|created resource  |the created entity is in the response (including “self” and “data” links)            |
+|204 |PUT |updated resource  |no body will be in the response                                                      |
+|400 |Any |Bad Request       |malformed request or invalid input                                                   |
+|401 |Any |unauthorized      |you are not authenticated                                                            |
+|403 |Any |forbidden         |we accept your token, but you can’t perform this action, no resource has been updated|
+|405 |Any |method not allowed|                                                                                     |
+|429 |Any |too many requests |throttle/rate-limit hit                                                              |
+|423 | Any | Locked | Special code we use when the helpdesk is offline for maintenance |
+
+### API Key Limits
+
+You can specify API limits on every API key you create. For example, it is not uncommon to set an upper limit on
+an API key to prevent some kind of mistake in it's use (such as a flood or infinite loop situation). You can define
+these limits in terms of an hourly limit or a daily limit.
+
+For cloud customers, there is also default global limit to prevent abuse. You can raise this on request by contacting
+ us at support@deskpro.com.
+ 
+When you hit a rate limit, requests will begin to fail with a HTTP status code `429 Too Many Requests` error.
+
+## Error Responses
 
 ```
 {
-    "status": 400
+    "status": 400,
     "code": "invalid_json_body",
     "message": "Invalid JSON body"
 }
 ```
+
+Error responses are also JSON and follow the shape described here.
 
 * The `status` will be the HTTP status code that most closely matches the error.
 * The `code` is a DeskPRO specific string to represent the specific error that happened. You may
@@ -194,9 +300,7 @@ wish to use this value in your code in an if/switch etc to base your error handl
 * The `message` is a human-readable English string that describes what went wrong. This value is typcially
 only useful for developers.
 
-#### Details Errors
-
-In some cases, detailed error messages are available, such as when there are form validation errors.
+### Detailed Errors
 
 ```json
 {
@@ -250,48 +354,15 @@ In some cases, detailed error messages are available, such as when there are for
 }
 ```
 
+In some cases, detailed error messages are available, such as when there are form validation errors.
+
 The root `errors` property is an object that has two properties:
 
 * `errors.errors` is a JSON array of error objects that happened on a global level (not specific to any one input).
 * `errors.fields` is a JSON object that has a property for every expected input name that had an error.
   Inside of each field is a property named “errors” which is an array of error objects (code/message).
 
-### Common HTTP Status Codes
-
-The HTTP status codes that the API returns is significant. Here is a list of common return codes.
-
-| Code   | Verbs | Example                         |
-|--------|-------------------------------------|---------------------------------|
-|200 |GET |found and returned|response is described above                                                          |
-|404 |Any |resource not found|                                                                                     |
-|201 |POST|created resource  |the created entity is in the response (including “self” and “data” links)            |
-|204 |PUT |updated resource  |no body will be in the response                                                      |
-|400 |Any |Bad Request       |malformed request or invalid input                                                   |
-|401 |Any |unauthorized      |you are not authenticated                                                            |
-|403 |Any |forbidden         |we accept your token, but you can’t perform this action, no resource has been updated|
-|405 |Any |method not allowed|                                                                                     |
-|429 |Any |too many requests |throttle/rate-limit hit                                                              |
-|423 | Any | Locked | Special code we use when the helpdesk is offline for maintenance |
-
-## API Key Limits
-
-You can specify API limits on every API key you create. For example, it is not uncommon to set an upper limit on
-an API key to prevent some kind of mistake in it's use (such as a flood or infinite loop situation). You can define
-these limits in terms of an hourly limit or a daily limit.
-
-For cloud customers, there is also default global limit to prevent abuse. You can raise this on request by contacting
- us at support@deskpro.com.
- 
-When you hit a rate limit, requests will begin to fail with a HTTP status code `429 Too Many Requests` error.
-
 # API Token Exchange
-
-You can also use the API to exchange an agent login for an API token which can be used to authenticate requests.
-An API token is similar to an API key except that it doesn't need to be created by an admin. It's created
-by the system when given a successful set of credentials.
-
-A token is used in the same way except the Authorzation header looks like `Authorization: token YOURTOKEN`. This is
-the same as the API key method except it starts with the word "token" instead of "key".
 
 > Example request sending login credentials
 
@@ -318,7 +389,8 @@ curl -H "Content-Type: application/json" \
 > The /me endpoint returns info about the agent account the token/api key is for
 
 ```shell
-curl -H "Authorization: token 18:BZWWGQ58QDX8H5B4W4RAJ978Q" http://example.com/api/v2/me
+curl -H "Authorization: token 18:BZWWGQ58QDX8H5B4W4RAJ978Q" \
+	http://example.com/api/v2/me
 ```
 
 > Example response:
@@ -339,20 +411,21 @@ curl -H "Authorization: token 18:BZWWGQ58QDX8H5B4W4RAJ978Q" http://example.com/a
 }
 ```
 
+You can also use the API to exchange an agent login for an API token which can be used to authenticate requests.
+An API token is similar to an API key except that it doesn't need to be created by an admin. It's created
+by the system when given a successful set of credentials.
+
+A token is used in the same way except the Authorzation header looks like `Authorization: token YOURTOKEN`. This is
+the same as the API key method except it starts with the word "token" instead of "key".
+
+**`POST /api_tokens`**
+
+| Param | Description | Example |
+| --- | --- | --- |
+| `email` | Email address or username | user@example.com, my_username |
+| `password` | Plaintext password | mypassword |
+
 ## External Authentication Sources
-
-The above example works for DeskPRO-based logins or form-based logins where a username/email address
-and password can be gathered from the user and then passed directly to the API for validation. But it does
-NOT work for other types of authentication apps such as JWT, SAML, oAuth, etc.
-
-For these types of apps, you need to render a website with a special URL for the user to log in to. When the user
-finishes logging in, they are redirect back to DeskPRO which can then communicate the changes up to your app
-through Javascript.
-
-### Get a list of usersources
-
-Typically, the first step in your app will be to get a list of usersources that exist so you can render
-some kind of button.
 
 > Request user sources used for agents:
 
@@ -361,6 +434,7 @@ curl http://example.com/api/v2/api_tokens/user_sources/agent
 ```
 
 > Example response including a Google+ user source:
+> You could then render a button "Google+ Sign-In" which loads the login_url when clicked
 
 ```json
 {
@@ -373,7 +447,7 @@ curl http://example.com/api/v2/api_tokens/user_sources/agent
             "display_type": "social",
             "display_order": 0,
             "display_options": {
-                "login_url": "http:\/\/master.dp.devput.com:8080\/api\/v2\/api_tokens\/user_sources\/5\/login?format=default"
+                "login_url": "http:\/\/example.com\/api\/v2\/api_tokens\/user_sources\/5\/login?format=default"
             },
             "is_enabled": true
         }
@@ -383,13 +457,27 @@ curl http://example.com/api/v2/api_tokens/user_sources/agent
 }
 ```
 
-### Handling the login
+The above example works for DeskPRO-based logins or form-based logins where a username/email address
+and password can be gathered from the user and then passed directly to the API for validation. But it does
+NOT work for other types of authentication where we need to send the user off to some external site (e.g. JWT, SAML, oAuth, Google+, Facebook, etc).
+
+For these types of apps, you need to render a website with a special URL for the user to log in to. When the user
+finishes logging in, they are redirect back to DeskPRO which can then communicate the changes up to your app
+through Javascript.
+
+Typically, the first step in your app will be to get a list of usersources that exist so you can render
+some kind of button for external usersources.
+
+## Handling External Login
 
 In your app, you would render a button that loaded the URL in the `data.display_options.login_url` field. In a web app,
 this might be rendering an `<a>` tag for example. In a desktop or mobile application, you would initialise a new
 web view to accept te login.
 
 After the user logs in, they are returned to DeskPRO which renders a special page like this:
+
+> After a user successfully logs in on the remote site, they are redirected
+> back to DeskPRO which renders this special script in your webview:
 
 ```html
 <script>sendPayload({
@@ -403,13 +491,11 @@ Javascript object.
 
 # Batch Requests
 
-Sometimes you want to perform multiple queries all at once. For example, maybe you need to load a few collections
-to populate a form. Normally you would need to submit multiple HTTP requests which could be slow.
-
 > Example request using a key-value map of requests to execute in a batch:
 
 ```shell
-curl -H "Content-Type: application/json" \
+curl -H "Authorization: key 1:CVRRGQ58QDX8H5B4W4RAJ978Q" \
+     -H "Content-Type: application/json" \
      -X POST \
      -d '
  {
@@ -443,32 +529,157 @@ curl -H "Content-Type: application/json" \
       }
     },
     "john": {
-      "headers": {
-        "response_code": 404
-      },
-      "data": {
-        "...": "..."
-      }
+        "headers": {
+          "response_code": 404
+        },
+        "data": {
+          "...": "..."
+        }
     },
     "...": "..."
 }
 ```
 
-You POST a map to `/api/v2/batch` describing the requests you want to submit. The system will process all of your reuqests
+Sometimes you want to perform multiple queries all at once. For example, maybe you need to load a few collections
+to populate a form. Normally you would need to submit multiple HTTP requests which could be slow.
+
+You POST a map to the `/batch` endpoint describing the requests you want to submit. The system will process all of your requests
 at once, and send you back a single result object. The keys of the result will be the same keys you submitted.
+
+**`POST /batch`**
+
+Post an object/map (top-level) with the following schema:
+
+| Property | Description | Example |
+| --- | --- | --- |
+| Note: `KEY` | Any arbitrary string you want to use to identify the request. | req_1, department_info, foobar, 12 |
+| `KEY.url` | The API endpoint you want to call. You can also specify query-string params here. | `/api/v2/me`, `/api/v2/tickets?page=2` |
+| `KEY.method` | (optional) GET, POST, DELETE, PUT. Defaults to GET. | GET |
+| `KEY.payload` | (optional) When using POST/PUT, this is the JSON object you want to submit as the payload itself. | `{"foo": "bar"}` |
+
 
 ## Short GET Syntax
 
-You can also use the short GET syntax to process multiple GET requests all at once:
+You can also use the short GET syntax to process multiple GET requests all at once by specifying multiple `get[KEY]=endpoint_path` parameters.
+
+**`GET /batch`**
+
+| Param | Description | Example |
+| --- | --- | --- |
+| Note: `KEY` | The 'key' in `get[KEY]` can be any arbitrary string. It serves the same purpose as KEY above in the POST version of batch. | |
+| `get[KEY]` | The API endpoint to fetch | `/api/v2/me`, `/api/v2/tickets` |
+
+If you need to specify parameters for any of the `get[KEY]` calls (for example, to specify a page number), you can use the extended syntax.
+
+> Example GET call
+> Note: For purposes of readability, the URL has been split on multiple lines.
 
 ```shell
-curl -H "Content-Type: application/json" \
-    http://example.com/api/v2/batch/api/v2/batch?get[stars]=/api/v2/ticket_stars&get[departments]=/api/v2/ticket_departments
+curl -H "Authorization: key 1:CVRRGQ58QDX8H5B4W4RAJ978Q" \
+    http://example.com/api/v2/batch/api/v2/batch?
+	    get[stars]=/api/v2/ticket_stars
+	    &get[departments]=/api/v2/ticket_departments
+```
+
+> Here's an example where the endpoint contains parameters.
+> You need to encode '?' and '&' so they don't get read by the main batch request itself.
+
+```shell
+curl -H "Authorization: key 1:CVRRGQ58QDX8H5B4W4RAJ978Q" \
+    http://example.com/api/v2/batch/api/v2/batch?
+	    get[stars]=/api/v2/ticket_stars
+	    &get[tickets]=/api/v2/tickets%3Fpage%3D2%26ids%3D1%2C2%2C3%2C4
+	    
+# the last line decodes to a URL like:
+# /api/v2/tickets?page=2&ids=1,2,3,4
 ```
 
 # Side Loading
 
-A normal request for a resource usually includes IDs of related resources, like so:
+> Example ticket response without side loading
+
+```shell
+curl -H "Authorization: key 1:CVRRGQ58QDX8H5B4W4RAJ978Q" \
+	http://example.com/api/v2/tickets/123
+```
+
+> Example response. Notice how we have IDs for various relationships such as the person, agent or department.
+
+```json
+{
+    "data": {
+        "id": 123,
+        "ref": "XXXX-0028-IOCC",
+        "department": 20,
+        "person": 59080,
+        "agent": 2,
+        "status": "awaiting_user",
+        "subject": "Example Ticket"
+    },
+    "meta": [],
+    "linked": []
+}
+```
+
+> Example WITH sideloading on department and person
+
+```shell
+curl -H "Authorization: key 1:CVRRGQ58QDX8H5B4W4RAJ978Q" \
+	http://example.com/api/v2/tickets/123?include=department,person
+```
+
+> Example response with sideloaded objects
+
+```json
+{
+    "data": {
+        "id": 123,
+        "ref": "XXXX-0028-IOCC",
+        "department": 20,
+        "person": 59080,
+        "agent": 2,
+        "status": "awaiting_user",
+        "subject": "Example Ticket"
+    },
+    "meta": [],
+    "linked": {
+        "department": {
+            "20": {
+                "id": 20,
+                "title": "Support"
+            }
+        },
+        "person": {
+            "2": {
+                "id": 2,
+                "name": "John Doe",
+                "primary_email": "agent@example.com"
+            },
+            "59080": {
+                "id": 59080,
+                "name": "Fionna Apple",
+                "primary_email": "user@example.com"
+            }
+        }
+    }
+}
+```
+
+Most objects in DeskPRO have other objects that are related to them. For example, a ticket has various users associated with it such as the creator, the assigned agent and any followers or CC'd users.
+
+By default, the API will only return the IDs of these related objects and if you needed more information, you would need to use the API again to fetch the objects you wanted (for example, to get the actual title of the department a ticket was in).
+
+However, this is tedious if you are doing it a lot. For this reason, the DeskPRO API has the idea of _side-loading_ which instructs the API to return related objects of certain types. You do this by specifying the type of object you want to side-load in the request as a query parameter: `include=type1,type2,type3`.
+
+Examples:
+
+* `/tickets/123?include=department`
+* `/tickets/123?include=department,person,category,product,workflow`
+* `/people/456?include=usergroup`
+
+When you specify an `include` parameter, the related objects are returned in the response under the `linked` object. You'll get properties like `linked.TYPENAME.ID`.
+
+(Note that the actual data response stays the same. Your own app logic will need to connect the ID from the `data` to the object returned in the `linked` section.)
 
 # Access Control
 
