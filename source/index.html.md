@@ -143,7 +143,7 @@ curl -H "Authorization: key 2:YWK2PGCS8CNW62SR8TBTBKWMY" http://example.com/api/
         "prev": null,
         "last": "/tickets?page=106"
    },
-   "data": {
+   "data": [
       {
         "id": 1,
         "person_id": 4,
@@ -154,7 +154,7 @@ curl -H "Authorization: key 2:YWK2PGCS8CNW62SR8TBTBKWMY" http://example.com/api/
         "person_id": 12,
         "title": "Fizz Buzz"
       }
-   },
+   ],
    "meta": {
       "total": 5445,
       "page": 1,
