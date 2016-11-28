@@ -39,7 +39,7 @@ All API requests are under the path <strong>/api/v2/</strong>. Note the "v2" is 
 
 Since all API requests are simply HTTP requests, it's easy to use in any programming language. For the purposes of demonstration, we'll use cURL in our examples here.
 
-**API Browser**
+## API Browser
 
 On any DeskPRO instance, browse to `/api/v2/doc` to view a full auto-generated API browser.
 
@@ -696,7 +696,7 @@ agent that key was tied to had full permissions in the helpdesk.
 ## Access control via Tags
 
 Every API endpoint in the system has one or more "tags" associated with it. You can view the tags for a particular
-endpoint by finding it in the [Full API Browser](/api/v2/doc). Expand the API endpoint to view the details, and
+endpoint by finding it in the [Full API Browser](#api-browser). Expand the API endpoint to view the details, and
 under the "API tags for this endpoint" heading will be the list of tags applied to the endpoint.
 
 For example, `GET /api/v2/tickets` has a tag of `tickets.tickets.list`. And `DELETE /api/v2/tickets/{id}`
@@ -721,7 +721,7 @@ Examples:
 Most of the time, most APIs are available to any authenticated user of the API. But some APIs are locked down
 so they cannot be used except by users accessing the API by a specific method.
 
-You can view these limitations on each endpoint by viewing the [Full API Browser](/api/v2/doc). In an expanded
+You can view these limitations on each endpoint by viewing the [Full API Browser](#api-browser). In an expanded
 node for an endpoint, notice the value for "Applicable API Modes".
 
 * `key` is the msot common and means the API can be used via an API key
