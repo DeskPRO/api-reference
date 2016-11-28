@@ -102,6 +102,10 @@
       <div style="text-align: center; margin: 5px;">
         <img src="images/logo.png" />
       </div>
+      <div style="margin: 9px; font-size: 11px; color: #ccc;">
+        NOTE: The v2 API described in this document is currently in BETA. Documentation, SDKs, and guides are still under development.
+        Take care to only use APIs marked as <a href="#api-versions-and-backwards-compatibility" style="color: #ccc">stable</a>.
+      </div>
         <div class="lang-selector">
               <a href="#" data-language-name="shell">shell</a>
         </div>
@@ -147,7 +151,7 @@ All API requests are under the path <strong>/api/v2/</strong>. Note the &ldquo;v
 
 <p>Since all API requests are simply HTTP requests, it&rsquo;s easy to use in any programming language. For the purposes of demonstration, we&rsquo;ll use cURL in our examples here.</p>
 
-<p><strong>API Browser</strong></p>
+<h2 id="api-browser">API Browser</h2>
 
 <p>On any DeskPRO instance, browse to <code class="prettyprint">/api/v2/doc</code> to view a full auto-generated API browser.</p>
 
@@ -933,7 +937,7 @@ agent that key was tied to had full permissions in the helpdesk.</p>
 <h2 id="access-control-via-tags">Access control via Tags</h2>
 
 <p>Every API endpoint in the system has one or more &ldquo;tags&rdquo; associated with it. You can view the tags for a particular
-endpoint by finding it in the <a href="/api/v2/doc">Full API Browser</a>. Expand the API endpoint to view the details, and
+endpoint by finding it in the <a href="#api-browser">Full API Browser</a>. Expand the API endpoint to view the details, and
 under the &ldquo;API tags for this endpoint&rdquo; heading will be the list of tags applied to the endpoint.</p>
 
 <p>For example, <code class="prettyprint">GET /api/v2/tickets</code> has a tag of <code class="prettyprint">tickets.tickets.list</code>. And <code class="prettyprint">DELETE /api/v2/tickets/{id}</code>
@@ -960,7 +964,7 @@ actions you don&rsquo;t want to allow.</p>
 <p>Most of the time, most APIs are available to any authenticated user of the API. But some APIs are locked down
 so they cannot be used except by users accessing the API by a specific method.</p>
 
-<p>You can view these limitations on each endpoint by viewing the <a href="/api/v2/doc">Full API Browser</a>. In an expanded
+<p>You can view these limitations on each endpoint by viewing the <a href="#api-browser">Full API Browser</a>. In an expanded
 node for an endpoint, notice the value for &ldquo;Applicable API Modes&rdquo;.</p>
 
 <ul>
