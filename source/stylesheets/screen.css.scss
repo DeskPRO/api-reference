@@ -78,6 +78,9 @@ html, body {
       padding-bottom: 0.5em;
     }
   }
+  &>div.logo>img {
+    width: 80%;
+  }
 
   // This is the logo at the top of the ToC
   &>img {
