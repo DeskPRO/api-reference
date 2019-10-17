@@ -159,37 +159,31 @@ When you perform a `GET` request to load a resource or a collection, you'll get 
 ```json
 {
     "data": {},
-    "links": {},
-    "meta": {}
+    "meta": {},
+    "linked": {}
 }
 ```
 
 * `data` is the JSON representation of the resource requested, or an array of objects if you requested a collection
-* `links` optional; when specified, it is an array of useful links. Resource collections always include links for “next”, “prev”, “first”, “last”.
-* `meta` optional; misc information that varies based on endpoint. Resource collections should include “count”, “total_count*, “page”, “total_pages”.
+* `linked` optional; when specified, it is an object that contains additional entities requested in `?include` param.
+* `meta` optional; misc information that varies based on endpoint. Resource collections should include “count”, “total_count*, “current_page”, “total_pages” under "pagination" key.
 
 ### Collection Responses
 
 > Example request to /tickets which is a collection resource:
 
 ```shell
-curl -H "Authorization: key 2:YWK2PGCS8CNW62SR8TBTBKWMY" http://example.com/api/v2/tickets
+curl -H "Authorization: key 2:YWK2PGCS8CNW62SR8TBTBKWMY" http://example.com/api/v2/tickets?include=person
 ```
 
 > Example response of a collection resource
 
 ```json
 {
-   "links": {
-        "first": "/tickets",
-        "next": "/tickets?page=2",
-        "prev": null,
-        "last": "/tickets?page=106"
-   },
    "data": [
       {
         "id": 1,
-        "person_id": 4,
+        "person": 4,
         "subject": "Foo Bar",
         "...": "..."
       },
@@ -200,11 +194,22 @@ curl -H "Authorization: key 2:YWK2PGCS8CNW62SR8TBTBKWMY" http://example.com/api/
         "...": "..."
       }
    ],
+  "linked": {
+        "person": {
+          "4": {
+            "id": 4,
+            "first_name": "John",
+            "last_name": "Doe"
+          }
+        }
+   },
    "meta": {
-      "total": 5445,
-      "page": 1,
-      "per_page": 10,
-      "total_pages": 545
+      "pagination": {
+        "total": 5445,
+        "current_page": 1,
+        "per_page": 10,
+        "total_pages": 545
+      }
    }
 }
 ```
@@ -223,18 +228,10 @@ During a resource collection request, you can specify the following optional que
 
 Collection responses are always an _array_  of objects inside of `data`.
 
-`links` will contain some useful links to help you paginate:
-
-* `next` URL to the next page of results
-* `prev` URL to the previous page of results
-* `self` URL to the page you requested
-* `first` URL to the first page of results
-* `last` URL to the last page of results
-
-`meta` will contain some useful data:
+`meta` will contain some useful data under `pagination` key:
 
 * `total` is the total count (all matching resources)
-* `page` is current page number
+* `current_page` is current page number
 * `per_page` is a count of the number of resources returned to you on this page
 * `total_pages` is the total number of pages for this request
 
