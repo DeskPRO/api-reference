@@ -295,15 +295,15 @@ It is best practice to always include a date version prefix in your API request 
 <p>When you perform a <code class="prettyprint">GET</code> request to load a resource or a collection, you&rsquo;ll get a response like this. </p>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-    </span><span class="nt">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
-    </span><span class="nt">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+    </span><span class="nt">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w">
+    </span><span class="nt">"linked"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
 <ul>
 <li><code class="prettyprint">data</code> is the JSON representation of the resource requested, or an array of objects if you requested a collection</li>
-<li><code class="prettyprint">links</code> optional; when specified, it is an array of useful links. Resource collections always include links for “next”, “prev”, “first”, “last”.</li>
-<li><code class="prettyprint">meta</code> optional; misc information that varies based on endpoint. Resource collections should include “count”, “total_count*, “page”, “total_pages”.</li>
+<li><code class="prettyprint">linked</code> optional; when specified, it is an object that contains additional entities requested in <code class="prettyprint">?include</code> param.</li>
+<li><code class="prettyprint">meta</code> optional; misc information that varies based on endpoint. Resource collections should include “count”, “total_count*, “current_page”, “total_pages” under &ldquo;pagination&rdquo; key.</li>
 </ul>
 
 <h3 id="collection-responses">Collection Responses</h3>
@@ -311,23 +311,17 @@ It is best practice to always include a date version prefix in your API request 
 <blockquote>
 <p>Example request to /tickets which is a collection resource:</p>
 </blockquote>
-<pre class="highlight shell"><code>curl -H <span class="s2">"Authorization: key 2:YWK2PGCS8CNW62SR8TBTBKWMY"</span> http://example.com/api/v2/tickets
+<pre class="highlight shell"><code>curl -H <span class="s2">"Authorization: key 2:YWK2PGCS8CNW62SR8TBTBKWMY"</span> http://example.com/api/v2/tickets?include<span class="o">=</span>person
 </code></pre>
 
 <blockquote>
 <p>Example response of a collection resource</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-   </span><span class="nt">"links"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"first"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/tickets"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"next"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/tickets?page=2"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"prev"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"last"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/tickets?page=106"</span><span class="w">
-   </span><span class="p">},</span><span class="w">
    </span><span class="nt">"data"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
       </span><span class="p">{</span><span class="w">
         </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"person_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"person"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
         </span><span class="nt">"subject"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Foo Bar"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"..."</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="w">
       </span><span class="p">},</span><span class="w">
@@ -338,11 +332,22 @@ It is best practice to always include a date version prefix in your API request 
         </span><span class="nt">"..."</span><span class="p">:</span><span class="w"> </span><span class="s2">"..."</span><span class="w">
       </span><span class="p">}</span><span class="w">
    </span><span class="p">],</span><span class="w">
+  </span><span class="nt">"linked"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"person"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"4"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Doe"</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+   </span><span class="p">},</span><span class="w">
    </span><span class="nt">"meta"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">5445</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"page"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"per_page"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"total_pages"</span><span class="p">:</span><span class="w"> </span><span class="mi">545</span><span class="w">
+      </span><span class="nt">"pagination"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"total"</span><span class="p">:</span><span class="w"> </span><span class="mi">5445</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"current_page"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"per_page"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"total_pages"</span><span class="p">:</span><span class="w"> </span><span class="mi">545</span><span class="w">
+      </span><span class="p">}</span><span class="w">
    </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
@@ -363,21 +368,11 @@ It is best practice to always include a date version prefix in your API request 
 
 <p>Collection responses are always an <em>array</em>  of objects inside of <code class="prettyprint">data</code>.</p>
 
-<p><code class="prettyprint">links</code> will contain some useful links to help you paginate:</p>
-
-<ul>
-<li><code class="prettyprint">next</code> URL to the next page of results</li>
-<li><code class="prettyprint">prev</code> URL to the previous page of results</li>
-<li><code class="prettyprint">self</code> URL to the page you requested</li>
-<li><code class="prettyprint">first</code> URL to the first page of results</li>
-<li><code class="prettyprint">last</code> URL to the last page of results</li>
-</ul>
-
-<p><code class="prettyprint">meta</code> will contain some useful data:</p>
+<p><code class="prettyprint">meta</code> will contain some useful data under <code class="prettyprint">pagination</code> key:</p>
 
 <ul>
 <li><code class="prettyprint">total</code> is the total count (all matching resources)</li>
-<li><code class="prettyprint">page</code> is current page number</li>
+<li><code class="prettyprint">current_page</code> is current page number</li>
 <li><code class="prettyprint">per_page</code> is a count of the number of resources returned to you on this page</li>
 <li><code class="prettyprint">total_pages</code> is the total number of pages for this request</li>
 </ul>
